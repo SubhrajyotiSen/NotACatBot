@@ -5,12 +5,8 @@ import random
 import os
 
 def get_url():
-    random_number = random.randint(1,2)
-    if (random_number == 1):
-        image_url = requests.get('http://aws.random.cat/meow').json()['file']
-    else:
-        response = requests.get('https://api.thecatapi.com/v1/images/search').json()
-        image_url = response[0]['url']
+    response = requests.get('https://api.thecatapi.com/v1/images/search').json()
+    image_url = response[0]['url']
     return image_url
 
 def meow(bot, update):
