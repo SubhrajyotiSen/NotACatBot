@@ -18,6 +18,12 @@ def meow(bot, update):
     else:
         bot.send_photo(chat_id=chat_id, photo=url)
 
+def fact(bot, update):
+    url = "https://cat-fact.herokuapp.com/facts/random?amount=1"
+    chat_id = update.message.chat_id
+    response = requests.get(url).json()
+    text = response['text']
+    bot.send_message(chat_id=chat_id, text=text)
 
 def start(bot, update):
     bot.send_message(chat_id = update.message.chat_id, text='Let\'s start meow-ing')
@@ -27,6 +33,7 @@ def main():
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('meow',meow))
     dp.add_handler(CommandHandler('start',start))
+    dp.add_handler(CommandHandler('fact',fact))
     updater.start_polling()
     updater.idle()
 
