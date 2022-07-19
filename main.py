@@ -19,10 +19,10 @@ def meow(bot, update):
         bot.send_photo(chat_id=chat_id, photo=url)
 
 def fact(bot, update):
-    url = "https://cat-fact.herokuapp.com/facts/random?amount=1"
+    url = "https://catfact.ninja/fact?max_length=200"
     chat_id = update.message.chat_id
     response = requests.get(url).json()
-    text = response['text']
+    text = response['fact']
     bot.send_message(chat_id=chat_id, text=text)
 
 def start(bot, update):
