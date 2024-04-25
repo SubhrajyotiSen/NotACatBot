@@ -16,7 +16,7 @@ def meow(bot, update):
     chat_id = update.message.chat_id
     timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
     log = '{} | {} | meow\n'.format(timestamp, chat_id)
-    with open('../stats.txt', 'a',  encoding="utf-8") as f:
+    with open('/data/stats.txt', 'a',  encoding="utf-8") as f:
         f.write(log)    
     if (url.endswith('gif')):
         bot.send_animation(chat_id=chat_id, animation=url)
@@ -28,7 +28,7 @@ def fact(bot, update):
     chat_id = update.message.chat_id
     timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
     log = '{} | {} | fact\n'.format(timestamp, chat_id)
-    with open('../stats.txt', 'a',  encoding="utf-8") as f:
+    with open('/data/stats.txt', 'a',  encoding="utf-8") as f:
         f.write(log)    
     response = requests.get(url).json()
     text = response['fact']
