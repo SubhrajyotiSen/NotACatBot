@@ -6,7 +6,7 @@ Since you think this is a cat bot, here we go
 git clone https://github.com/SubhrajyotiSen/NotACatBot
 cd NotACatBot
 docker build -t catbot .
-docker run -d -e TG_BOT_TOKEN=YOUR_API_TOKEN catbot
+docker run -d -e TG_BOT_TOKEN=YOUR_API_TOKEN -v {host_mount_dir}:/data catbot
 ```
 
 #### Why Docker?
