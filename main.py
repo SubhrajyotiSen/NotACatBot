@@ -1,4 +1,5 @@
-from telegram.ext import Updater, CommandHandler
+from telegram.ext.updater import Updater
+from telegram.ext.commandhandler import CommandHandler
 import os
 import logging
 import bot_handlers
