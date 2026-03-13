@@ -1,5 +1,4 @@
-from telegram.ext.updater import Updater
-from telegram.ext.commandhandler import CommandHandler
+from telegram.ext import Application, CommandHandler
 import os
 import logging
 import bot_handlers
@@ -14,16 +13,14 @@ def main():
         print("Error: TG_BOT_TOKEN not set.")
         return
 
-    updater = Updater(token, use_context=True)
-    dp = updater.dispatcher
+    application = Application.builder().token(token).build()
     
-    dp.add_handler(CommandHandler('meow', bot_handlers.meow))
-    dp.add_handler(CommandHandler('start', bot_handlers.start))
-    dp.add_handler(CommandHandler('fact', bot_handlers.fact))
+    application.add_handler(CommandHandler('meow', bot_handlers.meow))
+    application.add_handler(CommandHandler('start', bot_handlers.start))
+    application.add_handler(CommandHandler('fact', bot_handlers.fact))
     
     print("Bot starting polling...")
-    updater.start_polling()
-    updater.idle()
+    application.run_polling()
 
 if __name__ == '__main__':
     main()

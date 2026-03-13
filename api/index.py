@@ -1,9 +1,9 @@
 from flask import Flask, request
-from telegram import Update, Bot
-from telegram.ext.dispatcher import Dispatcher
-from telegram.ext.commandhandler import CommandHandler
+from telegram import Update
+from telegram.ext import Application, CommandHandler
 import os
 import logging
+import asyncio
 import bot_handlers
 
 # Setup logging
@@ -13,27 +13,31 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-# Initialize Bot and Dispatcher
 TOKEN = os.environ.get('TG_BOT_TOKEN')
 if not TOKEN:
     logger.error("TG_BOT_TOKEN environment variable not set!")
 
-bot = Bot(token=TOKEN)
+async def _process_update(json_update):
+    # Initialize application inside the request's event loop
+    application = Application.builder().token(TOKEN).build()
+    
+    # Register handlers from shared module
+    application.add_handler(CommandHandler('meow', bot_handlers.meow))
+    application.add_handler(CommandHandler('start', bot_handlers.start))
+    application.add_handler(CommandHandler('fact', bot_handlers.fact))
 
-# Dispatcher setup for serverless
-dispatcher = Dispatcher(bot, None, workers=0, use_context=True)
-
-# Register handlers from shared module
-dispatcher.add_handler(CommandHandler('meow', bot_handlers.meow))
-dispatcher.add_handler(CommandHandler('start', bot_handlers.start))
-dispatcher.add_handler(CommandHandler('fact', bot_handlers.fact))
+    await application.initialize()
+    await application.start()
+    update = Update.de_json(json_update, application.bot)
+    await application.process_update(update)
+    await application.stop()
+    await application.shutdown()
 
 @app.route('/', methods=['POST'])
 def webhook():
     if request.method == "POST":
         json_update = request.get_json(force=True)
-        update = Update.de_json(json_update, bot)
-        dispatcher.process_update(update)
+        asyncio.run(_process_update(json_update))
     return "ok"
 
 @app.route('/', methods=['GET'])
